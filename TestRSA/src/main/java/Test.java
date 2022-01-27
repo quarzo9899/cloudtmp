@@ -46,7 +46,7 @@ public class Test {
 
 
 			
-			String secretMessage = "{id:1524,expire:\"23/01/2022-sssssssss12:57\"}";
+			String secretMessage = "{\"id\":1601,\"isAdmin\":true,\"expire\":\"2022-01-28T23:05\"}";
 			Cipher encryptCipher = Cipher.getInstance("RSA");
 			encryptCipher.init(Cipher.ENCRYPT_MODE, publicKey);
 			byte[] secretMessageBytes = secretMessage.getBytes(StandardCharsets.UTF_8);
@@ -54,7 +54,7 @@ public class Test {
 			String encodedMessage = Base64.getEncoder().encodeToString(encryptedMessageBytes);
 			System.out.println(encodedMessage);
 			
-			String decodeTest = "BAscKCD2m32n2GH7t6RpzRiWgJSM8dinNfUl0g0peP99qSITdvA9gfsgLg/PVamyRE2PQ5lFsNxkxTpj6faiMZwNUdQG8nm88nTTMAOvcDnB/fh37q1xjS7j1+mXdGA=";
+			String decodeTest = "CTKLWb6/ViOhg5K8UmH/my58H3gb7qrhb7WWFSAJNjF8I2WoyqruNw50rSz6ihgNWYd54TFk3FwFFYEzqg6DObPLSA68x7lPvH6cToZ/hv9mQI9YxXs8LY7mFGMmtEc=";
 			File privateKeyFile = new File("private.key");
 			byte[] privateKeyBytes = Files.readAllBytes(privateKeyFile.toPath());
 			keyFactory = KeyFactory.getInstance("RSA");

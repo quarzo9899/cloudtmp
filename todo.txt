@@ -1,0 +1,3 @@
+USER:
+- Aggiungere gli http error code giusti
+- Aggiungere l'errore di mail già presente durante la registrazione

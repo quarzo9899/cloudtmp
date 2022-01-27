@@ -7,9 +7,7 @@ import edu.unimib.user.utils.Crypt;
 import edu.unimib.user.utils.Hash;
 import edu.unimib.user.utils.MessageBody;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,15 +33,7 @@ public class UtenteController {
      */
     Utente utente = utenteRepository.save(utenteRequest);
 
-    Instant expireValue = Instant.now().plus(8, ChronoUnit.HOURS);
-    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
-
-    LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
-
-    MessageBody msg = new MessageBody(utente.getId(), utente.isAdmin(), now.toString());
-    Gson gson = new Gson();
-    String json = gson.toJson(msg);
-    return Crypt.crypt(json);
+    return Crypt.crypt(createToken(utente));
   }
 
   @PostMapping("/login")
@@ -52,16 +42,14 @@ public class UtenteController {
     if (utente == null || !utente.getPassword().equals(Hash.sha256(utenteRequest.getPassword())))
       throw new RuntimeException("Wrong password or email!!");
 
-    LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES);
-
-    MessageBody msg = new MessageBody(utente.getId(), utente.isAdmin(), now.toString());
-    Gson gson = new Gson();
-    String json = gson.toJson(msg);
-    return Crypt.crypt(json);
+    return Crypt.crypt(createToken(utente));
   }
 
-  /**
-   * DA CANCELLARE NON MANDARE IN 'PRODUZIONE' @GetMapping("/login") public List<Utente> getUtenti()
-   * { return utenteRepository.findAll(); }
-   */
+  private String createToken(Utente utente) {
+    LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES).plusHours(6);
+
+	  MessageBody msg = new MessageBody(utente.getId(), utente.isAdmin(), now.toString());
+	  Gson gson = new Gson();
+	  return gson.toJson(msg);  
+  }
 }
