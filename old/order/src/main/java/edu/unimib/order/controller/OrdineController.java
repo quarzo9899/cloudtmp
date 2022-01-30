@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import edu.unimib.order.model.Ordine;
 import edu.unimib.order.repository.OrdineRepository;
+import edu.unimib.order.utils.Crypt;
 import edu.unimib.order.utils.Decrypt;
 import edu.unimib.order.utils.MessageBody;
 import edu.unimib.order.utils.Prodotto;
@@ -93,6 +94,9 @@ public class OrdineController {
 	  
 	  private boolean isProdottoAvailable(int prodottoId, int quantità) {
 		  try {
+		    LocalDateTime expireTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES).plusHours(6);
+
+		  MessageBody token = new MessageBody(0, true, expireTime.toString());
 
 		  String productServiceUrl = System.getenv("product_service_url");
 		  
@@ -100,6 +104,7 @@ public class OrdineController {
 		  HttpClient client = HttpClients.custom().build();
 		  HttpUriRequest request = RequestBuilder.get()
 		    .setUri(productServiceUrl + "/prodotti/" + prodottoId)
+		    .setHeader("Token",  Crypt.crypt(new Gson().toJson(token)) )
 		    .build();
 		  HttpResponse response = client.execute(request);
 	        String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
@@ -178,4 +183,5 @@ public class OrdineController {
 			            () ->
 			            new RuntimeException("Ordine non trovato"));
 	  }
+
 }

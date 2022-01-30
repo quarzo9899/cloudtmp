@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: user
+  namespace: eshop
+spec:
+  ports:
+  - port: 8080
+  selector:
+    app: user
+  clusterIP: None
+  ---
+  apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user
+  namespace: eshop
+spec:
+  selector:
+    matchLabels:
+      app: user
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: user
+    spec:
+      containers:
+      - image: mysql
+        name: mysql
+        env:
+          # Use secret in real usage
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secretmysql
+              key: ROOT_PASSWORD
+        - name: MYSQL_DATABASE
+          value: user
+        ports:
+        - containerPort: 3306
+          name: mysql
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
