@@ -13,7 +13,7 @@ import javax.crypto.Cipher;
 public class Crypt {
   public static String crypt(String msg) {
     try {
-      File publicKeyFile = new File("C:\\public.key");
+      File publicKeyFile = new File("/etc/keys/public.key");
       byte[] publicKeyBytes = Files.readAllBytes(publicKeyFile.toPath());
       KeyFactory keyFactory = KeyFactory.getInstance("RSA");
       EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyBytes);
