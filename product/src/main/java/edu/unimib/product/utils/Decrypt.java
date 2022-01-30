@@ -13,7 +13,7 @@ import javax.crypto.Cipher;
 public class Decrypt {
 	  public static String Decrypt(String msg) {
 	    try {
-			File privateKeyFile = new File("C:\\private.key");
+			File privateKeyFile = new File("/etc/keys/private.key");
 			byte[] privateKeyBytes = Files.readAllBytes(privateKeyFile.toPath());
 			KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 		    PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
