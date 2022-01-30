@@ -35,6 +35,7 @@ public class ProdottoController {
 		  return tokenExpireDate.isAfter(LocalDateTime.now());
 	  }
 	  
+	  /**
 	  @GetMapping("/prodotti")
 	  public List<Prodotto> getProdotti(@RequestHeader("Token") String Token) {
 		  String tokenDecrypted = Decrypt.Decrypt(Token);
@@ -45,20 +46,26 @@ public class ProdottoController {
 		  }
 		  return prodottoRepository.findAll();
 	  }
+	  **/
+
+	  @GetMapping("/prodotti")
+	  public List<Prodotto> getProdotti() {
+		  return prodottoRepository.findAll();
+	  }
 	  
 	  @PostMapping("/prodotti")
 	  public Prodotto createProdotto(@Valid @RequestBody Prodotto prodottoRequest, @RequestHeader("Token") String Token) {
 		  String tokenDecrypted = Decrypt.Decrypt(Token);
 		  Gson gson = new Gson();
 		  MessageBody msg = gson.fromJson(tokenDecrypted, MessageBody.class);
-		  if(!isTokenValid(msg.expire)) {
+		  if(!isTokenValid(msg.expire))
 			  throw new RuntimeException("Token non valido");
-		  }
 		  if(!msg.isAdmin())
 			  throw new RuntimeException("Utente non admin");
 		  return prodottoRepository.save(prodottoRequest);
 	  }
 	  
+	  /**
 	  @GetMapping("/prodotti/{prodottoId}")
 	  public Prodotto getProdotto(@PathVariable long prodottoId, @RequestHeader("Token") String Token) {
 		  String tokenDecrypted = Decrypt.Decrypt(Token);
@@ -72,6 +79,15 @@ public class ProdottoController {
 	                new RuntimeException("Prodotto non trovato"));
 
 	  }
+	  **/
+	  
+	  @GetMapping("/prodotti/{prodottoId}")
+	  public Prodotto getProdotto(@PathVariable long prodottoId) {
+		  return prodottoRepository.findById(prodottoId).orElseThrow(
+		            () ->
+	                new RuntimeException("Prodotto non trovato"));
+	  }
+	  
 	  @PostMapping("/prodotti/{prodottoId}")
 	  public Prodotto updateProdotto(@PathVariable Long prodottoId, @Valid @RequestBody Prodotto prodottoRequest, @RequestHeader("Token") String Token) {
 		  String tokenDecrypted = Decrypt.Decrypt(Token);
@@ -86,6 +102,8 @@ public class ProdottoController {
 				  .map(
 						  prodotto -> {
 							  prodotto.setNome(prodottoRequest.getNome());
+							  prodotto.setPrezzo(prodottoRequest.getPrezzo());
+							  prodotto.setQuantità(prodottoRequest.getQuantità());
 							  prodotto.setImgUrl(prodottoRequest.getImgUrl());
 							  prodotto.setCategorie(prodottoRequest.getCategorie());
 							  return prodottoRepository.save(prodotto);

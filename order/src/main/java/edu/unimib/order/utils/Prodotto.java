@@ -1,4 +1,4 @@
-package edu.unimib.product.model;
+package edu.unimib.order.utils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,32 +16,14 @@ import javax.validation.constraints.NotNull;
 @Entity(name = "prodotto")
 @Table
 public class Prodotto {
-	  @Id
-	  @GeneratedValue(generator = "prodotto_generator")
-	  @SequenceGenerator(
-	      name = "prodotto_generator",
-	      sequenceName = "prodotto_sequence",
-	      initialValue = 1000)
 	  private long id;
 	  
-	  @Column(name = "nome")
-	  @NotNull
 	  private String nome;
 	  
-	  @Column(name = "imgUrl")
-	  @NotNull
 	  private String imgUrl;
-	  
-	  @ManyToMany
-	  @JoinColumn(name = "categorie_id")
-	  private Set<Categoria> categorie = new HashSet<Categoria>();
-	  
-	  @Column(name = "prezzo")
-	  @NotNull
+	  	  
 	  private int prezzo;
 
-	  @Column(name = "quantità")
-	  @NotNull
 	  private int quantità;
 
 	public long getId() {
@@ -66,14 +48,6 @@ public class Prodotto {
 
 	public void setImgUrl(String imgUrl) {
 		this.imgUrl = imgUrl;
-	}
-
-	public Set<Categoria> getCategorie() {
-		return categorie;
-	}
-
-	public void setCategorie(Set<Categoria> categorie) {
-		this.categorie = categorie;
 	}
 
 	public int getPrezzo() {

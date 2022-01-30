@@ -1,4 +1,4 @@
-package edu.unimib.user.utils;
+package edu.unimib.order.utils;
 
 public class MessageBody {
   public long id;

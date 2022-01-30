@@ -46,9 +46,9 @@ public class UtenteController {
   }
 
   private String createToken(Utente utente) {
-    LocalDateTime now = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES).plusHours(6);
+    LocalDateTime expireTime = LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES).plusHours(6);
 
-	  MessageBody msg = new MessageBody(utente.getId(), utente.isAdmin(), now.toString());
+	  MessageBody msg = new MessageBody(utente.getId(), utente.isAdmin(), expireTime.toString());
 	  Gson gson = new Gson();
 	  return gson.toJson(msg);  
   }

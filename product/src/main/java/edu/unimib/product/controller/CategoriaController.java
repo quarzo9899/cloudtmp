@@ -52,14 +52,22 @@ public class CategoriaController {
 		  return gson.toJson(categorieNome);
 	  }**/
 	  
+	  
+	  /**
 	  @GetMapping("/categorie")
-	  public List<Categoria> getCategorie(@RequestHeader("Token") String Token) {
+	  public List<Categoria> getCategorie() {
 		  String tokenDecrypted = Decrypt.Decrypt(Token);
 		  Gson gson = new Gson();
 		  MessageBody msg = gson.fromJson(tokenDecrypted, MessageBody.class);
 		  if(!isTokenValid(msg.expire)) {
 			  throw new RuntimeException("Token non valido");
 		  }
+		  return categoriaRepository.findAll();
+	  }
+	  **/
+	  
+	  @GetMapping("/categorie")
+	  public List<Categoria> getCategorie() {
 		  return categoriaRepository.findAll();
 	  }
 	  
@@ -76,6 +84,7 @@ public class CategoriaController {
 		  return categoriaRepository.save(categoriaRequest);
 	  }  
 	  
+	  /**
 	  @GetMapping("/categorie/{categoriaName}")
 	  public Set<Prodotto> getProdottiByCategoria(@PathVariable String categoriaName, @RequestHeader("Token") String Token) {
 		  String tokenDecrypted = Decrypt.Decrypt(Token);
@@ -84,6 +93,16 @@ public class CategoriaController {
 		  if(!isTokenValid(msg.expire))
 			  throw new RuntimeException("Token non valido");
 		  
+		  Categoria categoria = categoriaRepository.findByNome(categoriaName);
+		  if(categoria == null)
+			  throw new RuntimeException("Categoria non trovata");
+		  return categoria.getProdotti();
+	  }
+	  **/
+	  
+
+	  @GetMapping("/categorie/{categoriaName}")
+	  public Set<Prodotto> getProdottiByCategoria(@PathVariable String categoriaName) {
 		  Categoria categoria = categoriaRepository.findByNome(categoriaName);
 		  if(categoria == null)
 			  throw new RuntimeException("Categoria non trovata");
@@ -104,6 +123,7 @@ public class CategoriaController {
 		  if(categoria == null)
 			  throw new RuntimeException("Categoria non trovata");
 		  categoria.setNome(categoriaRequest.getNome());
+		  categoria.setProdotti(categoriaRequest.getProdotti());
 		  return categoriaRepository.save(categoria);
 	  }
 	  
