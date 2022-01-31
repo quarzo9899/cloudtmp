@@ -53,8 +53,7 @@ public class OrdineController {
   }
 
   @PostMapping("/ordini")
-  public List<Ordine> postOrdine(
-      @Valid @RequestBody Ordine ordineRequest, @RequestHeader("Token") String Token) {
+  public Ordine postOrdine(@RequestBody Ordine ordineRequest, @RequestHeader("Token") String Token) {
     String tokenDecrypted = Decrypt.Decrypt(Token);
     Gson gson = new Gson();
     MessageBody msg = gson.fromJson(tokenDecrypted, MessageBody.class);
@@ -63,30 +62,35 @@ public class OrdineController {
     if (ordineRequest.getProdottiId().size() == 0)
       throw new RuntimeException("Nessun prodotto richiesto!!!");
 
-    if (!isProdottiAvailables(ordineRequest.getProdottiId()))
-      throw new RuntimeException("Uno o piï¿½ prodotti non sono validi!!!");
+    int costo = isProdottiAvailables(ordineRequest.getProdottiId());
+    if (costo == -1)
+      throw new RuntimeException("Uno o più prodotti non sono validi!!!");
 
-    ordineRequest.setId(msg.getId());
+    ordineRequest.setCosto(costo);
+    ordineRequest.setUtenteId(msg.getId());
     ordineRequest.setDataOrdine(new Date());
     ordineRequest.setStato("Ordine in elaborazione");
 
-    return ordineRepository.findAll();
+    return ordineRepository.save(ordineRequest);
   }
 
-  private boolean isProdottiAvailables(List<Integer> prodottiId) {
+  private int isProdottiAvailables(List<Integer> prodottiId) {
+	int costo = 0;
     Set<Integer> uniqueProdottiId = new HashSet<Integer>(prodottiId);
     for (Integer prodottoId : uniqueProdottiId) {
       int occurrences = Collections.frequency(prodottiId, prodottoId);
-      if (!isProdottoAvailable(prodottoId, occurrences)) return false;
+      int tmp = isProdottoAvailable(prodottoId, occurrences);
+      if (tmp == -1) return -1;
+      costo += tmp;
     }
-    return true;
+    return costo;
   }
 
-  private boolean isProdottoAvailable(int prodottoId, int quantita) {
+  private int isProdottoAvailable(int prodottoId, int quantita) {
+	int costo = 0;
     try {
 
       String productServiceUrl = System.getenv("product_service_url");
-
       HttpClient client = HttpClients.custom().build();
       HttpUriRequest request =
           RequestBuilder.get().setUri(productServiceUrl + "/prodotti/" + prodottoId).build();
@@ -94,11 +98,12 @@ public class OrdineController {
       String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
       System.out.println("Response body: " + responseBody);
       Prodotto prod = new Gson().fromJson(responseBody, Prodotto.class);
-      if (prod.getQuantita() < quantita) return false;
+      if (prod.getQuantita() < quantita) return -1;
+      costo = prod.getPrezzo() * quantita;
     } catch (Exception e) {
       throw new RuntimeException(e.getMessage());
     }
-    return true;
+    return costo;
   }
 
   @GetMapping("/ordini/{ordineId}")

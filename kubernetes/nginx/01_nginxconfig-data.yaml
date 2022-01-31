@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  default.conf: "server { \n listen 80;\n server_name frontend;\n location /prodotti
+    {\n\tproxy_pass http://product:8080/prodotti;\n }\n location /categorie {\n\tproxy_pass
+    http://product:8080/categorie;\n }\n location /register {\n\tproxy_pass http://user:8080/register;\n
+    }\n location /login {\n\tproxy_pass http://user:8080/login;\n }\n location /ordini
+    {\n\tproxy_pass http://order:8080/ordini;\n }\n}\n"
+metadata:
+  name: nginxconfig-data
+  namespace: eshop

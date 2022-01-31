@@ -1,0 +1,19 @@
+server { 
+ listen 80;
+ server_name frontend;
+ location /prodotti {
+	proxy_pass http://product:8080/prodotti;
+ }
+ location /categorie {
+	proxy_pass http://product:8080/categorie;
+ }
+ location /register {
+	proxy_pass http://user:8080/register;
+ }
+ location /login {
+	proxy_pass http://user:8080/login;
+ }
+ location /ordini {
+	proxy_pass http://order:8080/ordini;
+ }
+}

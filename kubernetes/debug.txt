@@ -1,3 +1,5 @@
  minikube kubectl -- run -it --rm -n eshop --image=alpine --restart=Never ash
  minikube kubectl -- run -it --rm -n eshop --image=ubuntu --restart=Never bash
+ minikube kubectl -- run -it --rm -n eshop --image=curlimages/curl:7.81.0 https://curl.haxx.se
 kubectl get ingress  -n eshop
+kubectl run -n eshop curl -it --rm --image=curlimages/curl -- sh
