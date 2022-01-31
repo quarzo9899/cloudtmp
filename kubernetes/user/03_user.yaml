@@ -9,8 +9,8 @@ spec:
   selector:
     app: user
   clusterIP: None
-  ---
-  apiVersion: apps/v1
+---
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: user
@@ -26,25 +26,23 @@ spec:
       labels:
         app: user
     spec:
+      volumes:
+      - name: keys-v
+        secret:
+          secretName: keys
+          defaultMode: 0600 
       containers:
-      - image: mysql
-        name: mysql
+      - image: nannuzzi/user:0.0.1
+        name: user
         env:
-          # Use secret in real usage
-        - name: MYSQL_ROOT_PASSWORD
+        - name: spring.datasource.url
+          value: jdbc:mysql://mysql/user
+        - name: spring.datasource.password
           valueFrom:
             secretKeyRef:
               name: secretmysql
               key: ROOT_PASSWORD
-        - name: MYSQL_DATABASE
-          value: user
-        ports:
-        - containerPort: 3306
-          name: mysql
         volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
-      volumes:
-      - name: mysql-persistent-storage
-        persistentVolumeClaim:
-          claimName: mysql-pv-claim
+        - name: keys-v
+          readOnly: true
+          mountPath: "/etc/keys"
