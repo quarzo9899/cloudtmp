@@ -1,2 +1,3 @@
  minikube kubectl -- run -it --rm -n eshop --image=alpine --restart=Never ash
  minikube kubectl -- run -it --rm -n eshop --image=ubuntu --restart=Never bash
+kubectl get ingress  -n eshop

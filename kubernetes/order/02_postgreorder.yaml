@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgreorder-pv-volume
+  namespace: eshop
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgreorder-pv-claim
+  namespace: eshop
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgreorder
+  namespace: eshop
+spec:
+  ports:
+  - port: 5432
+  selector:
+    app: postgreorder
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgreorder
+  namespace: eshop
+spec:
+  selector:
+    matchLabels:
+      app: postgreorder
+  serviceName: "postgreorder"
+  template:
+    metadata:
+      labels:
+        app: postgreorder
+    spec:
+      containers:
+      - image: postgres
+        name: postgreorder
+        env:
+        - name: PGDATA
+          value: /var/lib/postgresql/data/some_name/
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: secretpostgreorder
+              key: USERNAME
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: secretpostgreorder
+              key: PASSWORD
+        - name: POSTGRES_DB
+          value: order
+        ports:
+        - containerPort: 5432
+          name: postgreorder
+        volumeMounts:
+        - name: postgreorder-persistent-storage
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: postgreorder-persistent-storage
+        persistentVolumeClaim:
+          claimName: postgreorder-pv-claim
