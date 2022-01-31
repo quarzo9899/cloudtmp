@@ -2,8 +2,8 @@ package edu.unimib.order.model;
 
 import java.util.Date;
 import java.util.List;
-
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -14,103 +14,104 @@ import javax.validation.constraints.NotNull;
 @Entity(name = "ordine")
 @Table
 public class Ordine {
-	  @Id
-	  @GeneratedValue(generator = "ordine_generator")
-	  @SequenceGenerator(
-	      name = "ordine_generator",
-	      sequenceName = "ordine_sequence",
-	      initialValue = 1000)
-	  private long id;
-	  
-	  @Column(name = "dataOrdine")
-	  @NotNull
-	  private Date dataOrdine;
-	  
-	  @Column(name = "utenteId")
-	  @NotNull
-	  private long utenteId;
-	  
-	  @Column(name = "prodottiId")
-	  @NotNull
-	  private List<Integer> prodottiId;
-	  
-	  @Column(name = "costo")
-	  @NotNull
-	  private int costo;
-	  
-	  @Column(name = "pagamento")
-	  @NotNull
-	  private String pagamento;
-	  
-	  @Column(name = "stato")
-	  @NotNull
-	  private String stato;
-	  
-	  @Column(name = "indirizzo")
-	  @NotNull
-	  private String indirizzo;
+  @Id
+  @GeneratedValue(generator = "ordine_generator")
+  @SequenceGenerator(
+      name = "ordine_generator",
+      sequenceName = "ordine_sequence",
+      initialValue = 1000)
+  private long id;
 
-	public long getId() {
-		return id;
-	}
+  @Column(name = "dataOrdine")
+  @NotNull
+  private Date dataOrdine;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+  @Column(name = "utenteId")
+  @NotNull
+  private long utenteId;
 
-	public Date getDataOrdine() {
-		return dataOrdine;
-	}
+  @Column(name = "prodottiId")
+  @ElementCollection(targetClass=Integer.class)
+  @NotNull
+  private List<Integer> prodottiId;
 
-	public void setDataOrdine(Date dataOrdine) {
-		this.dataOrdine = dataOrdine;
-	}
+  @Column(name = "costo")
+  @NotNull
+  private int costo;
 
-	public long getUtenteId() {
-		return utenteId;
-	}
+  @Column(name = "pagamento")
+  @NotNull
+  private String pagamento;
 
-	public void setUtenteId(long utenteId) {
-		this.utenteId = utenteId;
-	}
+  @Column(name = "stato")
+  @NotNull
+  private String stato;
 
-	public List<Integer> getProdottiId() {
-		return prodottiId;
-	}
+  @Column(name = "indirizzo")
+  @NotNull
+  private String indirizzo;
 
-	public void setProdottiId(List<Integer> prodottiId) {
-		this.prodottiId = prodottiId;
-	}
+  public long getId() {
+    return id;
+  }
 
-	public int getCosto() {
-		return costo;
-	}
+  public void setId(long id) {
+    this.id = id;
+  }
 
-	public void setCosto(int costo) {
-		this.costo = costo;
-	}
+  public Date getDataOrdine() {
+    return dataOrdine;
+  }
 
-	public String getPagamento() {
-		return pagamento;
-	}
+  public void setDataOrdine(Date dataOrdine) {
+    this.dataOrdine = dataOrdine;
+  }
 
-	public void setPagamento(String pagamento) {
-		this.pagamento = pagamento;
-	}
+  public long getUtenteId() {
+    return utenteId;
+  }
 
-	public String getStato() {
-		return stato;
-	}
+  public void setUtenteId(long utenteId) {
+    this.utenteId = utenteId;
+  }
 
-	public void setStato(String stato) {
-		this.stato = stato;
-	}
+  public List<Integer> getProdottiId() {
+    return prodottiId;
+  }
 
-	public String getIndirizzo() {
-		return indirizzo;
-	}
+  public void setProdottiId(List<Integer> prodottiId) {
+    this.prodottiId = prodottiId;
+  }
 
-	public void setIndirizzo(String indirizzo) {
-		this.indirizzo = indirizzo;
-	}
+  public int getCosto() {
+    return costo;
+  }
+
+  public void setCosto(int costo) {
+    this.costo = costo;
+  }
+
+  public String getPagamento() {
+    return pagamento;
+  }
+
+  public void setPagamento(String pagamento) {
+    this.pagamento = pagamento;
+  }
+
+  public String getStato() {
+    return stato;
+  }
+
+  public void setStato(String stato) {
+    this.stato = stato;
+  }
+
+  public String getIndirizzo() {
+    return indirizzo;
+  }
+
+  public void setIndirizzo(String indirizzo) {
+    this.indirizzo = indirizzo;
+  }
 }

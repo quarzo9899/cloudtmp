@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: postgreprodact-pv-volume
+  name: postgreproduct-pv-volume
   namespace: eshop
   labels:
     type: local
@@ -17,7 +17,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: postgreprodact-pv-claim
+  name: postgreproduct-pv-claim
   namespace: eshop
 spec:
   storageClassName: manual
@@ -30,53 +30,55 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgreprodact
+  name: postgreproduct
   namespace: eshop
 spec:
   ports:
   - port: 5432
   selector:
-    app: postgreprodact
+    app: postgreproduct
   clusterIP: None
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgreprodact
+  name: postgreproduct
   namespace: eshop
 spec:
   selector:
     matchLabels:
-      app: postgreprodact
-  serviceName: "postgreprodact"
+      app: postgreproduct
+  serviceName: "postgreproduct"
   template:
     metadata:
       labels:
-        app: postgreprodact
+        app: postgreproduct
     spec:
       containers:
       - image: postgres
-        name: postgreprodact
+        name: postgreproduct
         env:
+        - name: PGDATA
+          value: /var/lib/postgresql/data/some_name/
         - name: POSTGRES_USER
           valueFrom:
             secretKeyRef:
-              name: secretpostgreprodact
+              name: secretpostgreproduct
               key: USERNAME
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: secretpostgreprodact
+              name: secretpostgreproduct
               key: PASSWORD
         - name: POSTGRES_DB
-          value: prodact
+          value: product
         ports:
         - containerPort: 5432
-          name: postgreprodact
+          name: postgreproduct
         volumeMounts:
-        - name: postgreprodact-persistent-storage
+        - name: postgreproduct-persistent-storage
           mountPath: /var/lib/postgresql/data
       volumes:
-      - name: postgreprodact-persistent-storage
+      - name: postgreproduct-persistent-storage
         persistentVolumeClaim:
-          claimName: postgreprodact-pv-claim
+          claimName: postgreproduct-pv-claim

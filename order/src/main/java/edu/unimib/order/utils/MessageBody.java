@@ -11,15 +11,15 @@ public class MessageBody {
     this.expire = expire;
   }
 
-	public long getId() {
-		return id;
-	}
-	
-	public boolean isAdmin() {
-		return isAdmin;
-	}
-	
-	public String getExpire() {
-		return expire;
-	}
+  public long getId() {
+    return id;
+  }
+
+  public boolean isAdmin() {
+    return isAdmin;
+  }
+
+  public String getExpire() {
+    return expire;
+  }
 }

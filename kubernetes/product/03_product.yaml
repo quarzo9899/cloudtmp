@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: product
+  namespace: eshop
+spec:
+  ports:
+  - port: 8080
+  selector:
+    app: product
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product
+  namespace: eshop
+spec:
+  selector:
+    matchLabels:
+      app: product
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: product
+    spec:
+      volumes:
+      - name: keys-v
+        secret:
+          secretName: keys
+          defaultMode: 0600 
+      containers:
+      - image: nannuzzi/product:0.0.1
+        name: product
+        env:
+        - name: spring.datasource.url
+          value: jdbc:postgresql://postgreproduct/product
+        - name: spring.datasource.username
+          valueFrom:
+            secretKeyRef:
+              name: secretpostgreproduct
+              key: USERNAME
+        - name: spring.datasource.password
+          valueFrom:
+            secretKeyRef:
+              name: secretpostgreproduct
+              key: PASSWORD
+        volumeMounts:
+        - name: keys-v
+          readOnly: true
+          mountPath: "/etc/keys"
