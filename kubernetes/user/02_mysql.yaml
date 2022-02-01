@@ -79,7 +79,6 @@ spec:
             secretKeyRef:
               name: secretmysql
               key: ROOT_PASSWORD
-        restartPolicy: Never
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:

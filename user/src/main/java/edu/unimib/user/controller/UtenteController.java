@@ -5,6 +5,8 @@ import edu.unimib.user.model.Utente;
 import edu.unimib.user.repository.UtenteRepository;
 import edu.unimib.user.utils.Crypt;
 import edu.unimib.user.utils.Hash;
+import edu.unimib.user.utils.MailCheckerAPI;
+import edu.unimib.user.utils.MailCheckerAPIResponse;
 import edu.unimib.user.utils.MessageBody;
 
 import java.time.LocalDateTime;
@@ -25,12 +27,11 @@ public class UtenteController {
     utenteRequest.setPassword(Hash.sha256(utenteRequest.getPassword()));
     if (utenteRequest.isAdmin()) utenteRequest.setAdmin(false);
 
-    /**
-     * MailCheckerAPIResponse response =
-     * MailCheckerAPI.makeAbstractRequest(utenteRequest.getMail());
-     * if(!response.is_valid_format.value || response.is_disposable_email.value) throw new
-     * RuntimeException("Error mail not valid");
-     */
+    MailCheckerAPIResponse response =
+    MailCheckerAPI.makeAbstractRequest(utenteRequest.getMail());
+    if(!response.is_valid_format.value || response.is_disposable_email.value) throw new
+      RuntimeException("Error mail not valid");
+    
     Utente utente = utenteRepository.save(utenteRequest);
 
     return Crypt.crypt(createToken(utente));

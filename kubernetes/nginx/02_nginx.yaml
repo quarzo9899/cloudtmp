@@ -44,4 +44,3 @@ spec:
       - name: nginxconfig
         configMap:
           name: nginxconfig-data
-
