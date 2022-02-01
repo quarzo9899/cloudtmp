@@ -32,7 +32,7 @@ spec:
           secretName: keys
           defaultMode: 0600 
       containers:
-      - image: nannuzzi/order:0.0.1
+      - image: nannuzzi/order:0.0.2
         name: order
         env:
         - name: spring.datasource.url
