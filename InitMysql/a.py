@@ -4,14 +4,11 @@ import time
 
 print("Start Script")
 try:
-  time.sleep(80)   
-
-  password = os.environ['DB_PASSWORD']
 
   mydb = mysql.connector.connect(
-    host="localhost",
+    host="192.168.0.202",
     user="root",
-    password=password,
+    password="password22",
     database="user"
   )
 
@@ -27,7 +24,7 @@ try:
 
 except Exception as e: print(e)
 
-print("RIP")
 
+print("RIP")
 while True:
     time.sleep(4000000)

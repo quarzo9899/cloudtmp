@@ -5,5 +5,4 @@ WORKDIR /code
 COPY . .  
 RUN pip install -r requirements.txt  
 
-EXPOSE 5000  
 CMD ["python", "/code/script.py"]`

@@ -71,10 +71,10 @@ spec:
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
-      - image: nannuzzi/initmysql:0.0.1
+      - image: nannuzzi/initmysql:0.0.9
         name: initmysql
         env:
-        - name: MY_PASS
+        - name: DB_PASSWORD
           valueFrom:
             secretKeyRef:
               name: secretmysql
