@@ -55,7 +55,7 @@ spec:
         app: postgreorder
     spec:
       containers:
-      - image: postgres
+      - image: postgres:latest
         name: postgreorder
         env:
         - name: PGDATA

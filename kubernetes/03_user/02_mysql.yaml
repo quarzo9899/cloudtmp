@@ -55,7 +55,7 @@ spec:
         app: mysql
     spec:
       containers:
-      - image: mysql
+      - image: mysql:latest
         name: mysql
         env:
         - name: MYSQL_ROOT_PASSWORD
@@ -71,7 +71,7 @@ spec:
         volumeMounts:
         - name: mysql-persistent-storage
           mountPath: /var/lib/mysql
-      - image: nannuzzi/initmysql:0.0.9
+      - image: nannuzzi/initmysql:latest
         name: initmysql
         resources:
           limits:
