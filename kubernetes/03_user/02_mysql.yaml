@@ -73,6 +73,10 @@ spec:
           mountPath: /var/lib/mysql
       - image: nannuzzi/initmysql:0.0.9
         name: initmysql
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
         env:
         - name: DB_PASSWORD
           valueFrom:

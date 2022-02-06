@@ -10,3 +10,10 @@ kubectl run -n eshop curl -it --rm --image=curlimages/curl -- sh
 
  kubectl logs --follow mysql-0 initmysql -n eshop
 kubectl exec -it -n eshop mysql-0 -c initmysql -- sh
+
+
+
+ minikube kubectl -- run -it --rm -n eshop --image=alpine --restart=Never ash
+
+kubectl exec -it -n eshop user-78b8977997-765k8 -- bash
+   echo "52.3.53.67 emailvalidation.abstractapi.com" >> /etc/hosts
